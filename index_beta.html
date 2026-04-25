@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion 1.0</title>
+    <style>
+        :root {
+            --gestib-orange: #f0ad4e;
+            --gestib-blue: #337ab7;
+            --bg-crema: #fdf5e6;
+            --input-yellow: #fcf8e3;
+            --border-red: #d9534f;
+            --border-grey: #ddd;
+        }
+
+        body, html { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: var(--bg-crema); height: 100%; overflow-x: hidden; }
+        
+        /* BARRA SUPERIOR */
+        .top-bar { background: white; padding: 8px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-grey); }
+        .fav-btn { background: var(--gestib-blue); color: white; border: none; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+
+        /* LAYOUT PRINCIPAL */
+        .main-container { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 45px); }
+
+        /* SIDEBAR */
+        .sidebar { padding: 15px; border-right: 1px solid #eee; display: flex; flex-direction: column; gap: 5px; background: rgba(255,255,255,0.3); }
+        .side-btn { background: var(--gestib-orange); color: white; border: none; padding: 10px; text-align: left; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .side-btn.active { background: var(--gestib-blue); }
+        .sub-menu { background: rgba(255,255,255,0.7); padding: 8px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #eee; }
+        .sub-link { display: block; padding: 6px 0; color: var(--gestib-blue); font-size: 12px; text-decoration: none; cursor: pointer; font-weight: bold; }
+        .sub-link:hover { text-decoration: underline; color: #23527c; }
+
+        /* CONTENIDO Y VISTAS (SOLUCIONADO EL ERROR DE VISIBILIDAD) */
+        .content { padding: 20px; }
+        .view { display: none; } /* Por defecto todas ocultas */
+        .view.active { display: block !important; } /* Solo la activa se muestra */
+
+        .panel { background: white; border: 1px solid var(--border-grey); border-radius: 4px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .panel-header { border-bottom: 2px solid var(--gestib-orange); padding: 10px; font-weight: bold; color: #555; background: #fafafa; }
+
+        /* FORMULARIO */
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
+        label { font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #444; }
+        select, input, textarea { background: var(--input-yellow); border: 1px solid #ccc; padding: 8px; font-size: 13px; outline: none; border-radius: 2px; }
+        textarea#fet { border: 1px solid var(--border-red); height: 120px; width: 100%; box-sizing: border-box; }
+        
+        /* TABLAS */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 13px; }
+        th { background: var(--gestib-orange); color: white; font-weight: bold; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* BADGES RESALTADOS */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; color: white; font-weight: bold; text-transform: uppercase; display: inline-block; }
+        .badge-avis { background: #5cb85c; } /* VERDE */
+        .badge-lleu { background: #f0ad4e; } /* NARANJA */
+        .badge-greu { 
+            background: #d9534f; /* ROJO */
+            font-size: 14px; 
+            padding: 8px 15px; 
+            border: 2px solid #a94442;
+            box-shadow: 0 0 8px rgba(217, 83, 79, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* MODAL */
+        #modal-detalle {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .informe-print {
+            background: white; width: 90%; max-width: 800px; padding: 40px;
+            border-radius: 4px; max-height: 90vh; overflow-y: auto;
+        }
+
+        .btn-delete { background: #d9534f; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; }
+        .btn-view { background: var(--gestib-blue); color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; margin-right: 5px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #informe-print-area, #informe-print-area * { visibility: visible; }
+            #informe-print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 0; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <span>Gestib 2026</span>
+        <button class="fav-btn">Asistencia</button>
+        <button class="fav-btn">Evaluación</button>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <button class="side-btn" onclick="showView('view-home')">Inicio</button>
+            <button class="side-btn active">Alumnat</button>
+            <div class="sub-menu">
+                <div class="sub-link" onclick="showView('view-form')">⭐ Nueva Amonestación</div>
+                <div class="sub-link" onclick="showView('view-list')">⭐ Ver Listado</div>
+                <div class="sub-link" onclick="showView('view-config')">⭐ Configurar Datos</div>
+            </div>
+            <button class="side-btn">Personal</button>
+        </div>
+
+        <div class="content">
+            
+            <div id="view-home" class="view active">
+                <div class="panel">
+                    <div class="panel-header">Bienvenida</div>
+                    <div style="padding: 20px;">
+                        <h3>Sistema de Gestión de Convivencia</h3>
+                        <p>Selecciona una opción del menú "Alumnat" para comenzar.</p>
+                        <div><img src="product-logo-animation.svg" alt="1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-config" class="view">
+                <div class="panel">
+                    <div class="panel-header">Gestión de Listas Maestras</div>
+                    <div style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                        <div><label>Enseñanzas:</label><div style="display:flex;"><input type="text" id="in-ens" style="flex:1"><button onclick="addItem('ensenyances', 'in-ens')">+</button></div><div id="list-ens" style="margin-top:10px; border:1px solid #ddd; height:100px; overflow-y:auto; background:white;"></div></div>
+                        <div><label>Cursos:</label><div style="display:flex;"><input type="text" id="in-curs" style="flex:1"><button onclick="addItem('cursos', 'in-curs')">+</button></div><div id="list-curs" style="margin-top:10px; border:1px solid #ddd; height:100px; overflow-y:auto; background:white;"></div></div>
+                        <div><label>Grupos:</label><div style="display:flex;"><input type="text" id="in-grup" style="flex:1"><button onclick="addItem('grupos', 'in-grup')">+</button></div><div id="list-grup" style="margin-top:10px; border:1px solid #ddd; height:100px; overflow-y:auto; background:white;"></div></div>
+                        <div><label>Alumnos:</label><div style="display:flex;"><input type="text" id="in-alum" style="flex:1"><button onclick="addItem('alumnos', 'in-alum')">+</button></div><div id="list-alum" style="margin-top:10px; border:1px solid #ddd; height:100px; overflow-y:auto; background:white;"></div></div>
+                        <div><label>Lugares:</label><div style="display:flex;"><input type="text" id="in-lloc" style="flex:1"><button onclick="addItem('lugares', 'in-lloc')">+</button></div><div id="list-lloc" style="margin-top:10px; border:1px solid #ddd; height:100px; overflow-y:auto; background:white;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-form" class="view">
+                <div class="panel">
+                    <div class="panel-header">Sanció alumnat</div>
+                    <div style="padding: 20px;">
+                        <div class="form-row">
+                            <div class="form-group"><label>Ensenyament:</label><select id="sel-ens"></select></div>
+                            <div class="form-group"><label>Curs:</label><select id="sel-curs"></select></div>
+                            <div class="form-group" style="flex:0.3"><label>Grup:</label><select id="sel-grup"></select></div>
+                            <div class="form-group"><label>Alumne:</label><select id="sel-alum" style="border: 1px solid var(--border-red);"></select></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Gravedad:</label>
+                                <select id="sel-tipo">
+                                    <option value="Avís">Avís</option>
+                                    <option value="Lleu">Lleu</option>
+                                    <option value="Greu">Greu</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label>Descripció del fet:</label>
+                        <textarea id="fet" placeholder="Escribe aquí los hechos detalladamente..."></textarea>
+                        <div class="form-row" style="margin-top:10px;">
+                            <div class="form-group"><label>Lloc del fet:</label><select id="sel-lloc"></select></div>
+                            <div class="form-group"><label>Data:</label><input type="date" id="data"></div>
+                        </div>
+                        <button class="fav-btn" onclick="saveSancion()" style="padding:12px 25px; font-size:14px; margin-top:10px;">💾 Guardar Sanción</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-list" class="view">
+                <div class="panel">
+                    <div class="panel-header">Historial de Sanciones Registradas</div>
+                    <table id="main-table">
+                        <thead><tr><th>Fecha</th><th>Alumno</th><th>Clase</th><th>Tipo</th><th>Acciones</th></tr></thead>
+                        <tbody id="tbody-main"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modal-detalle">
+        <div class="informe-print" id="informe-print-area">
+            <button class="no-print" onclick="document.getElementById('modal-detalle').style.display='none'" style="float:right; padding:5px 10px;">Cerrar</button>
+            <div id="detalle-body"></div>
+            <div class="no-print" style="margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
+                <button class="fav-btn" onclick="window.print()">🖨️ Generar PDF / Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos iniciales
+        let db = {
+            ensenyances: ["ESO"], cursos: ["1º ESO"], grupos: ["A", "B"],
+            alumnos: ["Juan Pérez", "Marta García"], lugares: ["Aula 12", "Patio"],
+            sanciones: []
+        };
+
+        // Función corregida para cambiar de sección
+        function showView(id) {
+            const views = document.getElementsByClassName('view');
+            for (let v of views) {
+                v.classList.remove('active');
+            }
+            document.getElementById(id).classList.add('active');
+
+            // Cargar datos según la sección
+            if(id === 'view-config') renderConfig();
+            if(id === 'view-form') populateSelectors();
+            if(id === 'view-list') renderTable();
+        }
+
+        // --- GESTIÓN DE CONFIGURACIÓN ---
+        function addItem(key, inputId) {
+            let v = document.getElementById(inputId).value.trim();
+            if(v) { db[key].push(v); document.getElementById(inputId).value = ""; renderConfig(); }
+        }
+
+        function renderConfig() {
+            const maps = {ensenyances:'ens', cursos:'curs', grupos:'grup', alumnos:'alum', lugares:'lloc'};
+            for(let k in maps) {
+                document.getElementById('list-'+maps[k]).innerHTML = db[k].map((item, i) => `
+                    <div style="font-size:12px; padding:5px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                        ${item} <span onclick="db['${k}'].splice(${i},1); renderConfig();" style="color:red; cursor:pointer; font-weight:bold;">✖</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // --- SINCRONIZAR FORMULARIO ---
+        function populateSelectors() {
+            const mapping = {ens:'ensenyances', curs:'cursos', grup:'grupos', alum:'alumnos', lloc:'lugares'};
+            for(let key in mapping) {
+                document.getElementById('sel-'+key).innerHTML = db[mapping[key]].map(i => `<option value="${i}">${i}</option>`).join('');
+            }
+        }
+
+        // --- SANCIONES ---
+        function saveSancion() {
+            if(!document.getElementById('fet').value) return alert("Por favor, describe los hechos.");
+            
+            const s = {
+                id: Date.now(),
+                f: document.getElementById('data').value,
+                a: document.getElementById('sel-alum').value,
+                c: document.getElementById('sel-curs').value + " " + document.getElementById('sel-grup').value,
+                t: document.getElementById('sel-tipo').value,
+                l: document.getElementById('sel-lloc').value,
+                h: document.getElementById('fet').value,
+                e: document.getElementById('sel-ens').value
+            };
+            db.sanciones.push(s);
+            alert("Amonestación guardada correctamente.");
+            document.getElementById('fet').value = "";
+            showView('view-list');
+        }
+
+        function renderTable() {
+            document.getElementById('tbody-main').innerHTML = db.sanciones.map((s, i) => `
+                <tr>
+                    <td>${s.f}</td>
+                    <td>${s.a}</td>
+                    <td>${s.c}</td>
+                    <td><span class="badge badge-${s.t.toLowerCase()}">${s.t}</span></td>
+                    <td>
+                        <button class="btn-view" onclick="verDetalle(${s.id})">Ver Detalle</button>
+                        <button class="btn-delete" onclick="borrarSancion(${i})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function borrarSancion(idx) {
+            if(confirm("¿Seguro que deseas eliminar este registro?")) {
+                db.sanciones.splice(idx, 1);
+                renderTable();
+            }
+        }
+
+        function verDetalle(id) {
+            const s = db.sanciones.find(x => x.id === id);
+            document.getElementById('detalle-body').innerHTML = `
+                <div style="text-align:center; margin-bottom:30px;">
+                    <h1 style="margin:0;">INFORME DE CONVIVENCIA</h1>
+                    <p style="color:#666;">Documento Oficial del Centro</p>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; background:#f9f9f9; padding:20px; border-radius:4px; border:1px solid #eee;">
+                    <div><strong>ALUMNO/A:</strong> ${s.a}</div>
+                    <div><strong>CLASE/GRUPO:</strong> ${s.c}</div>
+                    <div><strong>TIPO DE FALTA:</strong> <span class="badge badge-${s.t.toLowerCase()}">${s.t}</span></div>
+                    <div><strong>FECHA:</strong> ${s.f}</div>
+                    <div><strong>LUGAR:</strong> ${s.l}</div>
+                    <div><strong>ENSEÑANZA:</strong> ${s.e}</div>
+                </div>
+                <div style="margin-top:30px;">
+                    <h3 style="border-bottom:1px solid #333;">DESCRIPCIÓN DE LOS HECHOS</h3>
+                    <p style="white-space: pre-wrap; line-height:1.6; padding:10px; border:1px solid #ddd; min-height:150px;">${s.h}</p>
+                </div>
+                <div style="margin-top:60px; display:flex; justify-content:space-between; text-align:center;">
+                    <div style="width:200px; border-top:1px solid #333; padding-top:10px;">Firma del Tutor/a</div>
+                    <div style="width:200px; border-top:1px solid #333; padding-top:10px;">Firma Dirección</div>
+                </div>
+            `;
+            document.getElementById('modal-detalle').style.display = 'flex';
+        }
+
+        // Inicializar fecha
+        document.getElementById('data').valueAsDate = new Date();
+    </script>
+</body>
+</html>

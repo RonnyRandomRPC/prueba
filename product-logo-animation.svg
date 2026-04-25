@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+    <g opacity="1" style="mix-blend-mode:normal">
+        <defs>
+            <clipPath id="a" width="200%" height="200%" x="-50%" y="-50%">
+                <path fill="#fff" d="M0 160V0h160v160z" clip-rule="nonzero" />
+            </clipPath>
+        </defs>
+        <g clip-path="url(#a)">
+            <g transform="rotate(-90 80 80)">
+                <g id="e" opacity="0" style="mix-blend-mode:normal">
+                    <g opacity="1" style="mix-blend-mode:normal" transform="translate(0 39.977)">
+                        <defs>
+                            <linearGradient id="b" x1="90.443" x2="21.151" y1="118.108" y2="-1.909" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#1E8E3E" stop-opacity="1" />
+                                <stop offset="100%" stop-color="#34A853" stop-opacity="1" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#b)" fill-rule="nonzero" d="M60 74.649A39.805 39.805 0 0 1 45.36 60.003l-.004.003L10.713 0a80.025 80.025 0 0 0 69.282 120.023l34.651-60.017A40.004 40.004 0 0 1 60 74.65z" />
+                    </g>
+                    <g opacity="1" style="mix-blend-mode:normal" transform="translate(79.99 39.977)">
+                        <defs>
+                            <linearGradient id="c" x1="-10.777" x2="58.515" y1="118.689" y2="-1.328" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#FCC934" stop-opacity="1" />
+                                <stop offset="100%" stop-color="#FBBC04" stop-opacity="1" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#c)" fill-rule="nonzero" d="M40.004 40.004a39.806 39.806 0 0 1-5.364 20l.004.002L0 120.012A80.025 80.025 0 0 0 69.301 0H0a40.004 40.004 0 0 1 40.004 40.004z" />
+                    </g>
+                    <g opacity="1" style="mix-blend-mode:normal" transform="translate(10.696)">
+                        <defs>
+                            <linearGradient id="d" x1="0" x2="138.584" y1="49.992" y2="49.992" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#D93025" stop-opacity="1" />
+                                <stop offset="100%" stop-color="#EA4335" stop-opacity="1" />
+                            </linearGradient>
+                        </defs>
+                        <path fill="url(#d)" fill-rule="nonzero" d="M49.293 45.357a39.806 39.806 0 0 1 20.002-5.355v-.005h69.288A80.025 80.025 0 0 0 0 39.987l34.65 60.016a40.004 40.004 0 0 1 14.643-54.646z" />
+                    </g>
+                </g>
+            </g>
+            <g transform="translate(39.992 39.984)">
+                <g id="f" opacity="0" style="mix-blend-mode:normal">
+                    <g style="mix-blend-mode:normal">
+                        <path fill="#FFF" fill-opacity="1" fill-rule="nonzero" d="M80.008 40.004c0 22.093-17.91 40.004-40.004 40.004C17.91 80.008 0 62.098 0 40.004 0 17.91 17.91 0 40.004 0c22.093 0 40.004 17.91 40.004 40.004z" opacity="1" style="mix-blend-mode:NORMAL" />
+                    </g>
+                    <g style="mix-blend-mode:normal">
+                        <path fill="#1A73E8" fill-opacity="1" fill-rule="nonzero" d="M65.461 32.73c0 18.077-14.654 32.73-32.73 32.73C14.653 65.46 0 50.808 0 32.73 0 14.654 14.654 0 32.73 0c18.077 0 32.731 14.654 32.731 32.73z" opacity="1" style="mix-blend-mode:NORMAL" transform="translate(7.274 7.277)" />
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+    <animateTransform additive="sum" attributeName="transform" fill="freeze" calcMode="spline" dur="1s" href="#e" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="rotate" values="0 79.9991 80;0 79.9991 80;90 79.9991 80" />
+    <animateTransform additive="sum" attributeName="transform" fill="freeze" calcMode="spline" dur="1s" href="#e" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="translate" values="79.9991 80;79.9991 80;79.9991 80" />
+    <animateTransform additive="sum" attributeName="transform" fill="freeze" calcMode="spline" dur="1s" href="#e" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="scale" values="1 1;1 1;0.5625 0.5625" />
+    <animateTransform additive="sum" attributeName="transform" fill="freeze" calcMode="spline" dur="1s" href="#e" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="translate" values="-79.9991 -80;-79.9991 -80;-79.9991 -80" />
+    <animate attributeName="opacity" fill="freeze" calcMode="spline" dur="1s" href="#e" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" values="0;0;1" />
+    <animateTransform additive="sum" fill="freeze" attributeName="transform" calcMode="spline" dur="1s" href="#f" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="translate" values="40.0039 40.0039;40.0039 40.0039;40.0039 40.0039" />
+    <animateTransform additive="sum" fill="freeze" attributeName="transform" calcMode="spline" dur="1s" href="#f" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="scale" values="0.3 0.3;2 2;0.56 0.56" />
+    <animateTransform additive="sum" fill="freeze" attributeName="transform" calcMode="spline" dur="1s" href="#f" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" type="translate" values="-40.0039 -40.0039;-40.0039 -40.0039;-40.0039 -40.0039" />
+    <animate attributeName="opacity" fill="freeze" calcMode="spline" dur="1s" href="#f" keySplines="0.5 0.35 0.15 1;0.5 0.35 0.15 1" keyTimes="0;0.5;1" repeatCount="1" values="0;1;1" />
+</svg>
